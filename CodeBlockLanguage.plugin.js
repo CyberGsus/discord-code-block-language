@@ -43,10 +43,17 @@ class CodeBlockLanguage {
         this.viewedElements.add(el)
 
         el.setAttribute('language', '')
-        el.setAttribute('style', this.style)
         el.onmouseover = () => {
-          const language = el.className.split(' ').slice(-1)[0]
-          if (language === 'hljs') return
+          const splitNames = el.className
+            .split(' ')
+            .filter(cn => !cn.startsWith('da-'))
+          let language = ''
+          // 'hljs' and language class are the two last things added to className
+          let languageIndex = splitNames.indexOf('hljs') + 1
+          // no language set
+          if (languageIndex === 0 || languageIndex >= splitNames.length)
+            language = ''
+          else language = splitNames[languageIndex]
           el.setAttribute('language', language)
         }
         el.onmouseleave = () => el.setAttribute('language', '')
